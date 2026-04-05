@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(npx tsx:*)",
+      "Bash(curl -s http://localhost:3000/api/health)",
+      "Bash(python3 -m json.tool kill %1)",
+      "Bash(npm run:*)",
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(npx shadcn@latest init --yes --defaults)",
+      "Bash(npx shadcn@latest:*)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d['version']\\)\")",
+      "Bash(npx next:*)",
+      "Bash(kill 85766)",
+      "Bash(git init:*)",
+      "Bash(git:*)"
+    ]
+  }
+}
