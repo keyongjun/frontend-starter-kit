@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file=$(cat | jq -r '.tool_input.file_path // empty'); [[ \"$file\" =~ \\.(tsx?|jsx?)$ ]] && npx eslint --fix \"$file\" 2>/dev/null; npx prettier --write \"$file\" 2>/dev/null",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file=$(cat | jq -r '.tool_input.file_path // empty'); if [[ \"$file\" =~ src/components/([A-Z][^/]+)\\.tsx$ ]] && [[ ! \"$file\" =~ \\.stories\\.tsx$ ]]; then name=\"${BASH_REMATCH[1]}\"; stories=\"${file%.tsx}.stories.tsx\"; if [ ! -f \"$stories\" ]; then printf 'import type { Meta, StoryObj } from \"@storybook/react\";\\nimport %s from \"./%s\";\\n\\nconst meta: Meta<typeof %s> = {\\n  component: %s,\\n};\\nexport default meta;\\n\\ntype Story = StoryObj<typeof %s>;\\n\\nexport const Default: Story = {};\\n' \"$name\" \"$name\" \"$name\" \"$name\" \"$name\" > \"$stories\"; fi; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cmd=$(cat | jq -r '.tool_input.command // empty'); [[ \"$cmd\" =~ git[[:space:]]+commit ]] && npx tsc --noEmit",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
